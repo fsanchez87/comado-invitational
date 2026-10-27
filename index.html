@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Invitational Comando: unos 20 atletas por invitación, sin categorías. Nueve WODs a votación para elegir tres o cuatro pruebas.">
+<title>Invitational Comando</title>
+<!-- Typography verified against Rogue's website: Roboto Condensed + Roboto. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;600;700;800;900&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* === ARENA THEME: edit these variables to change the whole deck === */
+:root{--stage-bg:#050505;--slide-bg:#101010;--red:#bc0000;--white:#f7f7f4;--muted:#b9b9b9;--line:#ffffff26;--display:'Roboto Condensed',sans-serif;--body:'Roboto',sans-serif}
+*{box-sizing:border-box}
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   Include this ENTIRE file in every presentation.
+   Slides are authored at 1920×1080 and scaled as a whole.
+   =========================================== */
+
+/* 1. Lock the browser viewport */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 2. Full-window deck viewport */
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 3. Fixed 16:9 design canvas.
+   JavaScript sets transform: translate(...) scale(...). */
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+
+/* 4. Slides stack inside the fixed stage.
+   Content must be laid out at 1920×1080, not reflowed per device. */
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+/* 5. Keep media inside authored slide bounds */
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* 6. Presentation chrome stays outside the slide design system */
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* 7. Print one fixed-size slide per page */
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .deck-controls {
+        display: none !important;
+    }
+}
+
+/* 8. Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+/* === SHARED SLIDE CHROME / ATMOSPHERE === */
+body{font-family:var(--body);color:var(--white)}
+.slide{background:radial-gradient(ellipse at 85% 20%,#262626 0,transparent 58%),#101010}
+.slide:before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(#ffffff04 1px,transparent 1px),linear-gradient(90deg,#ffffff04 1px,transparent 1px);background-size:80px 80px;mask-image:linear-gradient(90deg,transparent,#000)}
+.slide:after{content:'';position:absolute;left:0;top:0;width:14px;height:1080px;background:var(--red)}
+.slide-header{position:absolute;left:90px;right:90px;top:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:24px;font-size:21px;letter-spacing:3px}
+.brand{font:900 39px var(--display);letter-spacing:-1px}.brand i{font-style:normal;color:#e00000}.header-meta{display:flex;gap:30px;align-items:center}.draft{font-size:17px;letter-spacing:2px;border:1px solid #ffffff40;padding:9px 12px;color:#d2d2d2}
+.slide-footer{position:absolute;left:94px;right:94px;bottom:48px;border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:19px;letter-spacing:2px;color:var(--muted)}
+.slide-footer nav{display:flex;gap:30px}.slide-footer a{color:inherit;text-decoration:none}.slide-footer a.current{color:#ff4545}.page{color:var(--white);font-family:var(--display);font-weight:700}
+.section-label{margin:0 0 13px;font-size:21px;letter-spacing:4px;color:var(--muted);text-transform:uppercase}.section-label:before{content:'';display:inline-block;width:35px;height:5px;margin:0 15px 5px 0;background:var(--red)}
+h2{font:800 100px/1.15 var(--display);letter-spacing:-2px;margin:0;text-transform:uppercase}h3{font:700 33px/1.15 var(--display);text-transform:uppercase;margin:0 0 16px}p{margin:0}.muted{color:var(--muted)}
+.content-head{position:absolute;left:94px;right:94px;top:185px}.intro{font-size:28px;line-height:1.5;color:var(--muted);margin-top:20px;max-width:1520px}
+/* === COVER: preserve the selected Arena visual system === */
+.cover-kicker{position:absolute;left:94px;top:235px;border-left:5px solid var(--red);padding-left:20px;font-size:24px;letter-spacing:4px}
+h1{position:absolute;top:270px;left:82px;margin:0;font:900 151px/1.22 var(--display);letter-spacing:-4px;z-index:2}h1 span{display:block;font-size:207px;letter-spacing:-5px}
+.cover-rule{position:absolute;left:94px;top:735px;width:125px;height:8px;background:var(--red)}.cover-sub{position:absolute;left:94px;top:780px;font-size:30px;line-height:1.6;color:var(--muted)}
+.plate{position:absolute;width:650px;height:650px;right:-110px;top:185px;border:100px solid #ffffff08;border-radius:50%;box-shadow:0 0 0 3px #ffffff0d,0 0 0 30px #ffffff03;transform:rotate(-18deg)}.plate:before{content:'';position:absolute;inset:95px;border:3px solid #ffffff12;border-radius:50%}.plate:after{content:'IX';position:absolute;inset:0;display:grid;place-items:center;font:800 170px var(--display);color:#ffffff0d}
+.cover-count{position:absolute;right:95px;bottom:170px;text-align:right}.cover-count strong{display:block;font:700 110px/.95 var(--display)}.cover-count span{font-size:20px;letter-spacing:6px;color:var(--muted)}
+/* === READING-FIRST INFORMATION LAYOUTS === */
+.info-grid{position:absolute;left:94px;right:94px;top:430px;display:grid;grid-template-columns:repeat(3,1fr);gap:36px 45px}
+.info-item{border-top:2px solid #ffffff35;padding-top:22px;min-height:200px}.info-item h3{display:flex;gap:18px;align-items:baseline}.info-item h3 span{color:#f14343;font-size:24px}.info-item p{font-size:26px;line-height:1.5;color:#cecece}
+.notice{position:absolute;left:94px;right:94px;top:902px;border-left:5px solid var(--red);background:#ffffff06;padding:17px 24px;font-size:22px;line-height:1.4;color:#d6d6d6}
+/* === WOD LAYOUT: large workout prescription + separate judging notes === */
+.wod-head{position:absolute;left:94px;right:94px;top:183px;display:flex;justify-content:space-between;align-items:flex-end}.wod-heading{max-width:1320px}.wod-heading h2{font-size:90px}.wod-number{font:800 143px/.85 var(--display);color:#ffffff20;letter-spacing:-7px}
+.wod-body{position:absolute;left:94px;right:94px;top:377px;height:502px;display:grid;grid-template-columns:1.22fr 1fr;gap:58px}
+.workout{min-height:0;padding:26px 38px;background:#f4f4f0;color:#151515;border-top:7px solid var(--red)}.workout-top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #0003;padding-bottom:18px;margin-bottom:17px}.format{font:800 33px var(--display);letter-spacing:1px}.cap{font-size:22px;color:#444}.workout .lead{font-size:24px;font-weight:600;margin:0 0 10px}
+.movements{list-style:none;padding:0;margin:0}.movements li{font:700 34px/1.35 var(--display);padding:7px 0;border-bottom:1px solid #0002}.movements li:last-child{border-bottom:0}.load{margin-top:16px;font-size:23px;line-height:1.4;color:#454545}
+.wod.compact .movements li{font-size:29px;line-height:1.25;padding:5px 0}
+/* === SECTION TITLE SLIDES: one divider before each major section === */
+.section-divider .divider-number{position:absolute;right:70px;top:145px;font:900 660px/1.15 var(--display);letter-spacing:-35px;color:#ffffff06;pointer-events:none}
+.divider-content{position:absolute;left:94px;top:330px;right:94px}.divider-content h2{font-size:174px;line-height:1.22;letter-spacing:-4px;margin-top:32px}.divider-content .intro{max-width:1000px;font-size:33px;line-height:1.6;margin-top:28px}.divider-rule{width:125px;height:8px;background:var(--red);margin-top:44px}.divider-bottom{position:absolute;left:94px;top:820px;font:600 24px var(--display);letter-spacing:4px;color:var(--muted)}
+/* === EVENT-SPECIFIC PRESCRIPTIONS: compact sequences, round grids and tables === */
+.sequence-table,.sprint-table{width:100%;border-collapse:collapse;text-align:left}.sequence-table th,.sprint-table th{font-size:18px;letter-spacing:1px;color:#666;font-weight:500;padding:8px 0 14px;border-bottom:1px solid #0003}.sequence-table td{font:700 28px/1.25 var(--display);padding:11px 0;border-bottom:1px solid #0002}.sequence-table td:first-child{font-size:23px;color:#777;width:50px}.sequence-table td:nth-child(2){width:53%}.sequence-table tr:last-child td{border:0}
+.round-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 25px}.round-card{border-top:2px solid #0003;padding-top:14px}.round-card h3{font-size:23px;color:#bc0000;margin-bottom:8px}.round-card p{font:700 26px/1.4 var(--display)}.round-card .round-load{font-size:23px;color:#555;font-weight:400}
+.sprint-table td{font:700 30px/1.35 var(--display);padding:14px 8px 14px 0;border-bottom:1px solid #0002}.sprint-table td:first-child{font-size:24px;color:#777}.sprint-table tr:last-child td{border:0}.sprint-table th{font-size:19px}.sprint-load{font-size:23px;line-height:1.55;margin-top:22px;color:#444}
+.sandbags{margin-top:17px;padding-top:15px;border-top:1px solid #0003;font-size:24px;line-height:1.6}.sandbags strong{font-weight:600}.elimination{font:700 36px/1.5 var(--display);color:var(--white);margin-top:10px}.elimination em{font-style:normal;color:#ff4545}
+.max-reps{margin-top:26px;font:800 84px/1.15 var(--display)}.max-reps small{display:block;font-size:40px}.max-load{font:700 51px/1.2 var(--display);color:#bc0000;margin-top:30px}.time-window{font-size:24px;line-height:1.5;margin-top:20px;color:#555}
+.judge{display:flex;flex-direction:column;gap:24px;padding-top:6px}.judge-block{border-bottom:1px solid var(--line);padding-bottom:22px}.judge-block:last-child{border:0}.judge h3{font-size:28px;margin-bottom:10px;letter-spacing:1px}.judge p{font-size:25px;line-height:1.48;color:#ccc}.judge b{color:var(--white);font-weight:600}
+/* === MOTION: reveal is tied to active slide, not viewport scroll === */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s cubic-bezier(.16,1,.3,1)}.active .reveal{opacity:1;transform:none}.active .reveal.delay{transition-delay:.12s}.active .reveal.later{transition-delay:.24s}
+/* === BROWSER UI: outside the fixed canvas === */
+button{font:500 13px var(--body);color:#eee;background:#202020;border:1px solid #ffffff35;border-radius:5px;padding:9px 13px;cursor:pointer}button:hover{background:#393939}button:focus-visible,a:focus-visible{outline:2px solid #ff4545;outline-offset:4px}button:disabled{opacity:.35;cursor:default}
+.deck-controls{display:flex;gap:8px;align-items:center;padding:6px;background:#080808e6;border:1px solid #ffffff26;border-radius:9px;opacity:0;transition:opacity .2s}.deck-controls:hover,.deck-controls:focus-within,body.ui-on .deck-controls{opacity:1}.counter{font-size:12px;min-width:48px;text-align:center;color:#ccc}.edit-hotzone{position:fixed;left:0;top:0;width:85px;height:65px;z-index:1001}.edit-toggle{position:fixed;left:14px;top:14px;z-index:1002;opacity:0;pointer-events:none;transition:opacity .2s}.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}.save-edit{position:fixed;top:14px;right:14px;z-index:1002;visibility:hidden}body.editing .save-edit{visibility:visible}
+body.editing [data-edit]{outline:1px dashed #ffffff60;outline-offset:5px;cursor:text}.workout [contenteditable=true]{outline-color:#bc000080!important}[contenteditable=true]:focus{outline:2px solid #e33!important}.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:1003;background:#eee;color:#111;padding:12px 18px;border-radius:5px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}
+@page{size:1920px 1080px;margin:0}@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.edit-hotzone,.edit-toggle,.save-edit,.toast{display:none!important}.reveal{opacity:1!important;transform:none!important}[data-edit]{outline:none!important}}
+</style>
+</head>
+<body>
+<div class="deck-viewport"><main class="deck-stage" id="deckStage" aria-label="Presentación Invitational Comando 111"></main></div>
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" aria-pressed="false" title="Activar edición (E)">Editar textos · E</button>
+<button class="save-edit" id="saveFile">Descargar HTML · Ctrl+S</button>
+<nav class="deck-controls" aria-label="Navegación de diapositivas">
+<button id="prev" aria-label="Diapositiva anterior">←</button><span class="counter" id="counter" aria-live="polite"></span><button id="next" aria-label="Diapositiva siguiente">→</button><button id="full" title="Pantalla completa (F)">⛶</button><button id="editControl">Editar</button>
+</nav>
+<div class="toast" role="status" id="toast"></div>
+<script>
+/* === EVENT CONTENT: transcribed from the supplied programme, without invented caps === */
+const wods=[
+ {name:'RIVER DEE',type:'7 RONDAS',format:'7 ROUNDS FOR TIME',cap:'',lead:'En cada una de las 7 rondas:',moves:['11 cal SkiErg','7 Wall Walks','11 cal SkiErg',"7 Devil’s Press (22,7/15,9 kg)"],score:'Tiempo total para completar las 7 rondas.',standard:'El SkiErg aparece dos veces en cada ronda. Mantener el orden indicado entre los cuatro bloques.',pending:'Time cap, estándares de Wall Walk y configuración de las mancuernas del Devil’s Press.'},
+ {name:'SINGLE MALT',type:'CARGA ASCENDENTE',format:'FOR TIME',cap:'TC · 12 MIN',layout:'sequence',lead:'Completa cada bloque de sentadillas y después su tramo:',rows:[['10 Back Squats · 143/102 kg','Hill Run'],['8 Back Squats · 152/107 kg','Hill Carry · 68/45 kg'],['6 Back Squats · 161/113 kg','Hill Carry · 57/34 kg'],['4 Back Squats · 170/120 kg','Hill Carry · 45/32 kg'],['2 Back Squats · 184/129 kg','Hill Run']],score:'Tiempo total. Límite de tiempo: 12 minutos.',standard:'La carga de Back Squat aumenta en cada bloque. Los Hill Carries descienden de 68/45 a 57/34 y 45/32 kg.',pending:'Distancia y recorrido del Hill Run y Hill Carry, implemento del carry, montaje de la barra y puntuación al llegar al cap.'},
+ {name:'THE VIKING',type:'MÁXIMAS REPETICIONES',format:'AMRAP',cap:'60 SEGUNDOS',layout:'max',score:'Máximo número de repeticiones de Viking Press completadas en 60 segundos.',standard:'Una única ventana de trabajo de 60 segundos. Carga indicada: 91/61 kg.',pending:'Configuración del implemento, posición inicial y final de la repetición y criterio de desempate.'},
+ {name:'PACKOUT',type:'5 RONDAS',format:'5 ROUNDS FOR TIME',cap:'',lead:'En cada una de las 5 rondas:',moves:['750 m Run','30/25 Toes to Bar','6,1 m Yoke Carry (301/220 kg)'],score:'Tiempo total para completar las 5 rondas, incluidas las carreras de penalización que correspondan.',standard:'Toes to Bar UNBROKEN. Romper la serie implica una carrera de penalización.',pending:'Distancia de la carrera de penalización, criterio de ruptura de la serie, time cap y estándares del Yoke Carry.'},
+ {name:'THE DUEL VI',type:'FORMATO ELIMINATORIO',format:'FOR TIME',cap:'ELIMINATORIAS',layout:'duel',lead:'Completa la secuencia en cada eliminatoria:',moves:['19,8 m Husafell Carry (68/45 kg)','19,8 m Sled Pull (125/79 kg)','3 Sandbags in Teeter'],score:'Formato eliminatorio. Avanzan los participantes según la secuencia indicada.',standard:'Altura del Teeter: 1,22 m.',pending:'Composición de mangas, asignación de calles, tiempos de descanso, time cap y criterios de desempate.'},
+ {name:'ORLANDO',type:'BARRA Y GIMNÁSTICOS',format:'FOR TIME',cap:'',lead:'Completa los cinco bloques en este orden:',moves:['10 Axle Clean & Jerks (93/68 kg)','15 Ring Muscle-Ups','10 Axle Clean & Jerks (93/68 kg)','15 Log Muscle-Ups','10 Axle Clean & Jerks (93/68 kg)'],score:'Tiempo total para completar la secuencia.',standard:'Tres bloques de 10 Axle Clean & Jerks, intercalados con Ring Muscle-Ups y Log Muscle-Ups, en ese orden.',pending:'Time cap, características del axle y del log, y estándares de ejecución de ambos tipos de Muscle-Up.'},
+ {name:'PULLING POWER',type:'4 RONDAS',format:'FOR TIME',cap:'',layout:'rounds',lead:'3 Rope Climbs al comienzo de cada ronda:',rounds:[{reps:12,load:'125/88'},{reps:9,load:'143/102'},{reps:6,load:'175/122'},{reps:3,load:'184/129'}],score:'Tiempo total para completar las 4 rondas.',standard:'Overhead Squat: 102/79 kg en todas las rondas. El Deadlift aumenta de carga a medida que descienden las repeticiones.',pending:'Altura de la cuerda, modalidad y estándares de Rope Climb, transiciones de carga y time cap.'},
+ {name:'DUNNOTTAR',type:'SECUENCIA COMPLETA',format:'FOR TIME',cap:'',compact:true,lead:'Completa todos los bloques en este orden:',moves:['30,5 m Handstand Walk','75 Double Unders','25 GHD Sit-Ups','50 Burpee Box Jump Overs','25 GHD Sit-Ups','75 Double Unders','30,5 m Handstand Walk'],score:'Tiempo total para completar la secuencia.',standard:'La prueba comienza y termina con 30,5 m de Handstand Walk. El bloque central son 50 Burpee Box Jump Overs.',pending:'Altura del cajón, segmentos del Handstand Walk, configuración del GHD, estándares de ejecución y time cap.'},
+ {name:'HIGHLAND SPRINT',type:'3 RONDAS',format:'FOR TIME',cap:'TC · 10 MIN',layout:'sprint',lead:'Mantén bike y lunges; reduce los Sandbag Toss:',score:'Tiempo total. Límite de tiempo: 10 minutos.',standard:'En cada ronda: 25/20 cal Echo Bike y 12,2 m Zercher Lunges (79/52 kg). Sandbag Toss: 3, 2 y 1 repeticiones.',pending:'Altura de lanzamiento del Sandbag Toss, implemento de Zercher Lunges y puntuación al llegar al cap.'}
+];
+const bases=[
+ ['Solo por invitación','Unos 20 atletas. La inscripción está reservada a quienes reciban una invitación. No hay inscripción abierta ni categorías.'],
+ ['Votación de los WODs','Se votará entre los 9 WODs propuestos para elegir las 3 o 4 pruebas que se disputarán. El número final está pendiente de confirmar.'],
+ ['Estructura original','WODs de Rogue Invitational 2026. Se respetan el orden, las distancias, las rondas, las repeticiones y las reglas de cada prueba.'],
+ ['Excepción por material','Solo se permite cambiar un movimiento o ejercicio si la instalación no dispone del material necesario. El resto de la estructura se mantiene.'],
+ ['Peso común por WOD','En cada WOD se acuerda usar peso masculino o femenino para todos. La carga no se elige individualmente y no crea categorías.'],
+ ['Condición para competir','Debes cumplir los movimientos y los pesos comunes acordados para las pruebas seleccionadas. Si no cumples alguno de estos estándares, no podrás competir.']
+];
+/* === SLIDE COMPOSITION: generated once; saved HTML keeps edited DOM === */
+const stage=document.getElementById('deckStage');
+const editable=(tag,text,cls='')=>`<${tag} data-edit class="${cls}">${text}</${tag}>`;
+const totalSlides=4+wods.length;
+function chrome(index,section){return `<header class="slide-header"><span class="brand">COMANDO<i>111</i></span><div class="header-meta"><span>GUÍA DE COMPETICIÓN</span><span class="draft" data-edit>BORRADOR · POR VALIDAR</span></div></header><footer class="slide-footer"><nav aria-label="Secciones"><a href="#2" class="${section==='bases'?'current':''}">01 / BASES Y REQUISITOS</a><a href="#4" class="${section==='wods'?'current':''}">02 / WODS</a></nav><span class="page">${String(index).padStart(2,'0')} — ${totalSlides}</span></footer>`}
+function infoSlide(index,label,title,intro,items,section,note){return `<section class="slide" aria-label="${title}">${chrome(index,section)}<div class="content-head reveal"><p class="section-label" data-edit>${label}</p>${editable('h2',title)}${editable('p',intro,'intro')}</div><div class="info-grid reveal delay">${items.map((item,i)=>`<article class="info-item"><h3><span>${String(i+1).padStart(2,'0')}</span><span data-edit style="color:inherit;font-size:inherit">${item[0]}</span></h3>${editable('p',item[1])}</article>`).join('')}</div>${editable('p',note,'notice reveal later')}</section>`}
+function divider(index,number,title,description,section,bottom){return `<section class="slide section-divider" aria-label="Sección ${title}">${chrome(index,section)}<div class="divider-number" aria-hidden="true">${number}</div><div class="divider-content reveal"><p class="section-label" data-edit>INVITATIONAL COMANDO / ${number}</p>${editable('h2',title)}<div class="divider-rule"></div>${editable('p',description,'intro')}</div>${editable('p',bottom,'divider-bottom reveal delay')}</section>`}
+/* === WORKOUT RENDERERS: preserve all prescribed values without shrinking dense lists === */
+function prescription(w){
+ if(w.layout==='sequence')return `<table class="sequence-table" aria-label="Secuencia de Back Squats y tramos de montaña"><thead><tr><th>#</th><th>BACK SQUATS</th><th>DESPUÉS</th></tr></thead><tbody>${w.rows.map((r,i)=>`<tr><td>${String(i+1).padStart(2,'0')}</td>${editable('td',r[0])}${editable('td',r[1])}</tr>`).join('')}</tbody></table>`;
+ if(w.layout==='rounds')return `<div class="round-grid">${w.rounds.map((r,i)=>`<article class="round-card"><h3 data-edit>ROUND ${i+1}</h3>${editable('p','3 Rope Climbs')}${editable('p',`${r.reps} Overhead Squats · 102/79 kg`)}${editable('p',`${r.reps} Deadlifts · ${r.load} kg`)}</article>`).join('')}</div>`;
+ if(w.layout==='sprint')return `<table class="sprint-table" aria-label="Tres rondas de Highland Sprint"><thead><tr><th>ROUND</th><th>ECHO BIKE</th><th>ZERCHER LUNGES</th><th>TOSS</th></tr></thead><tbody>${[3,2,1].map((n,i)=>`<tr><td>${String(i+1).padStart(2,'0')}</td>${editable('td','25/20 cal')}${editable('td','12,2 m')}${editable('td',String(n))}</tr>`).join('')}</tbody></table>${editable('p','Zercher Lunges · 79/52 kg<br>Sandbag Toss · 19,5/13,6 kg','sprint-load')}`;
+ if(w.layout==='max')return `${editable('div','MAX REPS<small>VIKING PRESS</small>','max-reps')}${editable('p','91/61 kg','max-load')}${editable('p','AMRAP 60″ · Una sola ventana de trabajo.','time-window')}`;
+ const list=`<ul class="movements">${w.moves.map(m=>editable('li',m)).join('')}</ul>`;
+  return list+(w.layout==='duel'?editable('p','<strong>Peso masculino:</strong> 45 / 68 / 91 kg<br><strong>Peso femenino:</strong> 32 / 45 / 68 kg','sandbags'):'');
+}
+if(!stage.querySelector('.slide')){
+ stage.innerHTML=`<section class="slide cover active" aria-label="Invitational Comando">${chrome(1,'')}<div class="plate" aria-hidden="true"></div>${editable('p','STRENGTH· ENDURANCE · COMMUNITY','cover-kicker reveal')}<h1 class="reveal delay"><span data-edit style="font-size:151px;letter-spacing:-4px">INVITATIONAL</span><span data-edit>COMANDO</span></h1><div class="cover-rule"></div>${editable('p','≈20 atletas. Por invitación. Sin categorías.<br>9 WODs a votación · 3 o 4 pruebas para competir.','cover-sub reveal later')}<div class="cover-count reveal later"><strong>00</strong><span>Diciembre</span></div></section>`;
+ stage.insertAdjacentHTML('beforeend',divider(2,'01','BASES Y REQUISITOS','Unos 20 atletas. Solo por invitación.<br>Sin categorías. Las mismas reglas para todos.','bases','INVITACIÓN / VOTACIÓN / PESO COMÚN / MATERIAL'));
+ stage.insertAdjacentHTML('beforeend',infoSlide(3,'01 / EL REGLAMENTO','BASES Y REQUISITOS','Por invitación. Sin categorías. De 9 WODs propuestos se elegirán 3 o 4 por votación.',bases,'bases','Por concretar: sistema y fecha de votación, número final de pruebas, puntuación, desempates, sede y horarios.'));
+ stage.insertAdjacentHTML('beforeend',divider(4,'02','WODS','9 WODs de Rogue Invitational 2026.<br>Se votarán las 3 o 4 pruebas de la competición.','wods','09 OPCIONES / 3 O 4 PRUEBAS / ESTRUCTURA ORIGINAL'));
+ wods.forEach((w,i)=>stage.insertAdjacentHTML('beforeend',`<section class="slide wod ${w.compact?'compact':''}" aria-label="EVENT ${i+1}: ${w.name}">${chrome(i+5,'wods')}<div class="wod-head reveal"><div class="wod-heading">${editable('p',`EVENT ${String(i+1).padStart(2,'0')} / ${w.type}`,'section-label')}${editable('h2',w.name)}</div><div class="wod-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</div></div><div class="wod-body reveal delay"><article class="workout"><div class="workout-top">${editable('span',w.format,'format')}${w.cap?editable('span',w.cap,'cap'):''}</div>${w.lead?editable('p',w.lead,'lead'):''}${prescription(w)}</article><aside class="judge"><div class="judge-block"><h3>${w.layout==='duel'?'ELIMINATORIAS':'PUNTUACIÓN'}</h3>${w.layout==='duel'?editable('div','20 → 15 → 10 → 5 → 2<br>→ <em>GANADOR</em>','elimination'):editable('p',w.score)}</div><div class="judge-block"><h3>${w.layout==='duel'?'TEETER':'CLAVES DE LA PRUEBA'}</h3>${editable('p',w.standard)}</div><div class="judge-block"><h3>POR CONFIRMAR</h3>${editable('p',w.pending)}</div></aside></div>${editable('p','WOD candidato · Rogue Invitational 2026 · Peso acordado para todos. Cambios de ejercicio solo si falta material.','notice reveal later')}</section>`));
+}
+/* === PRESENTATION CONTROLLER: keyboard, wheel, swipe, hash and fullscreen === */
+class SlidePresentation{
+ constructor(){this.slides=[...stage.querySelectorAll('.slide')];this.currentSlide=0;this.editing=false;this.setupScale();this.setupNavigation();this.setupEditing();this.showSlide(this.hashIndex());this.flashUI()}
+ setupScale(){const fit=()=>{const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`translate(${(innerWidth-1920*s)/2}px,${(innerHeight-1080*s)/2}px) scale(${s})`};fit();addEventListener('resize',fit)}
+ hashIndex(){const n=Number(location.hash.slice(1));return Number.isInteger(n)&&n>0?n-1:0}
+ showSlide(index){this.currentSlide=Math.max(0,Math.min(index,this.slides.length-1));this.slides.forEach((s,i)=>{const active=i===this.currentSlide;s.classList.toggle('active',active);s.classList.toggle('visible',active);s.setAttribute('aria-hidden',String(!active));s.inert=!active});document.getElementById('counter').textContent=`${this.currentSlide+1} / ${this.slides.length}`;document.getElementById('prev').disabled=this.currentSlide===0;document.getElementById('next').disabled=this.currentSlide===this.slides.length-1;try{history.replaceState(null,'',`#${this.currentSlide+1}`)}catch{}this.flashUI()}
+ flashUI(){document.body.classList.add('ui-on');clearTimeout(this.uiTimer);this.uiTimer=setTimeout(()=>document.body.classList.remove('ui-on'),2200)}
+ fullscreen(){if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>this.notify('Usa F11 para pantalla completa.'))}
+ setupNavigation(){document.getElementById('prev').onclick=()=>this.showSlide(this.currentSlide-1);document.getElementById('next').onclick=()=>this.showSlide(this.currentSlide+1);document.getElementById('full').onclick=()=>this.fullscreen();addEventListener('hashchange',()=>this.showSlide(this.hashIndex()));
+ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();this.download();return}if(e.key==='Escape'&&this.editing){this.toggleEditing();return}if(e.target.isContentEditable)return;if(e.key.toLowerCase()==='e'){e.preventDefault();this.toggleEditing();return}if(e.key.toLowerCase()==='f'){this.fullscreen();return}if(['ArrowRight','ArrowDown',' ','PageDown','ArrowLeft','ArrowUp','PageUp','Home','End'].includes(e.key)){if(e.target.closest('button'))return;e.preventDefault();if(e.key==='Home')this.showSlide(0);else if(e.key==='End')this.showSlide(this.slides.length-1);else this.showSlide(this.currentSlide+(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)?-1:1))}});
+ let wheelTime=0;document.addEventListener('wheel',e=>{if(this.editing||Math.abs(e.deltaY)<20||e.ctrlKey)return;e.preventDefault();if(Date.now()-wheelTime<800)return;wheelTime=Date.now();this.showSlide(this.currentSlide+(e.deltaY>0?1:-1))},{passive:false});
+ let start=null;stage.addEventListener('touchstart',e=>{if(this.editing||e.touches.length!==1)return;start={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});stage.addEventListener('touchend',e=>{if(!start)return;const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))this.showSlide(this.currentSlide+(dx<0?1:-1));start=null},{passive:true});document.addEventListener('mousemove',()=>this.flashUI());
+ stage.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){e.preventDefault();this.showSlide(Number(a.hash.slice(1))-1)}})}
+ /* === INLINE EDITOR: stable IDs, local autosave, plain-text paste, HTML export === */
+ setupEditing(){this.key='invitational-comando-arena-v5-unified-rules';this.fields=[...document.querySelectorAll('[data-edit]')];this.fields.forEach((el,i)=>{el.dataset.editId=el.dataset.editId||`text-${i}`;el.removeAttribute('contenteditable')});
+ try{const saved=JSON.parse(localStorage.getItem(this.key)||'{}');this.fields.forEach(el=>{if(typeof saved[el.dataset.editId]==='string')el.innerHTML=saved[el.dataset.editId]})}catch{}
+ document.getElementById('editToggle').onclick=()=>this.toggleEditing();document.getElementById('editControl').onclick=()=>this.toggleEditing();document.getElementById('saveFile').onclick=()=>this.download();const hot=document.querySelector('.edit-hotzone'),btn=document.getElementById('editToggle');let hide;[hot,btn].forEach(el=>{el.addEventListener('mouseenter',()=>{clearTimeout(hide);btn.classList.add('show')});el.addEventListener('mouseleave',()=>{hide=setTimeout(()=>{if(!this.editing)btn.classList.remove('show')},400)})});hot.onclick=()=>this.toggleEditing();
+ stage.addEventListener('input',e=>{if(!e.target.closest('[data-edit]'))return;this.saveLocal();clearTimeout(this.overflowTimer);this.overflowTimer=setTimeout(()=>this.checkOverflow(),400)});
+ stage.addEventListener('paste',e=>{if(!e.target.isContentEditable)return;e.preventDefault();const text=e.clipboardData.getData('text/plain');const selection=getSelection();if(!selection.rangeCount)return;const range=selection.getRangeAt(0);range.deleteContents();const node=document.createTextNode(text);range.insertNode(node);range.setStartAfter(node);range.collapse(true);selection.removeAllRanges();selection.addRange(range);this.saveLocal()})}
+ toggleEditing(){this.editing=!this.editing;document.body.classList.toggle('editing',this.editing);this.fields.forEach(el=>{el.contentEditable=String(this.editing);el.spellcheck=this.editing});const button=document.getElementById('editToggle');button.classList.toggle('active',this.editing);button.setAttribute('aria-pressed',String(this.editing));button.textContent=this.editing?'Terminar edición · Esc':'Editar textos · E';if(!this.editing){document.activeElement?.blur();this.saveLocal()}this.notify(this.editing?'Haz clic en cualquier texto. Ctrl+S descarga una copia editable.':'Edición terminada. Cambios guardados en este navegador.')}
+ saveLocal(){try{const data=Object.fromEntries(this.fields.map(el=>[el.dataset.editId,el.innerHTML]));localStorage.setItem(this.key,JSON.stringify(data))}catch{this.notify('No hay guardado local disponible. Descarga el HTML con Ctrl+S.')}}
+ checkOverflow(){const slide=this.slides[this.currentSlide];if([...slide.querySelectorAll('[data-edit],.workout,.judge,.info-item')].some(el=>el.scrollHeight>el.clientHeight+3||el.scrollWidth>el.clientWidth+3))this.notify('El texto supera su espacio. Acórtalo para mantener la legibilidad.')}
+ download(){this.saveLocal();const copy=document.documentElement.cloneNode(true);copy.querySelector('body').classList.remove('editing','ui-on');copy.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));copy.querySelectorAll('.show,.edit-toggle.active').forEach(el=>el.classList.remove('show','active'));copy.querySelector('#editToggle').textContent='Editar textos · E';copy.querySelector('#editToggle').setAttribute('aria-pressed','false');const blob=new Blob(['<!doctype html>\n'+copy.outerHTML],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='invitational-comando.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);this.notify('Copia HTML descargada con tus cambios.')}
+ notify(message){const el=document.getElementById('toast');el.textContent=message;el.classList.add('show');clearTimeout(this.toastTimer);this.toastTimer=setTimeout(()=>el.classList.remove('show'),3500)}
+}
+window.presentation=new SlidePresentation();
+</script>
+</body>
+</html>
