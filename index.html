@@ -326,14 +326,12 @@ class SlidePresentation{
   stage.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){e.preventDefault();this.showSlide(Number(a.hash.slice(1))-1)}})}
  /* === MOBILE READING CONTROLLER: separate DOM, same source content and hashes === */
  setupReading(){
-  this.reader=document.getElementById('readingView');this.readingContent=document.getElementById('readingContent');this.viewPreference='auto';
-  this.mobileQuery=matchMedia('(max-width: 820px)');
+  this.reader=document.getElementById('readingView');this.readingContent=document.getElementById('readingContent');
   document.getElementById('readingMode').onclick=()=>this.setReading(true);
   document.getElementById('readingIndex').onclick=()=>{const index=this.readingContent.querySelector('.reading-index');index.open=true;index.scrollIntoView({block:'start'});index.querySelector('summary').focus({preventScroll:true})};
   document.getElementById('presentationMode').onclick=()=>{this.setReading(false);document.getElementById('readingMode').focus({preventScroll:true})};
-  this.mobileQuery.addEventListener('change',()=>{if(this.viewPreference==='auto')this.setReading(this.mobileQuery.matches,true)});
   this.reader.addEventListener('click',e=>{const link=e.target.closest('a[data-reading-slide]');if(!link)return;e.preventDefault();const index=Number(link.dataset.readingSlide);const details=link.closest('details');if(details)details.open=false;this.showSlide(index);const target=this.readingContent.querySelector(`[data-slide-index="${index}"]`);target?.focus({preventScroll:true})});
-  this.setReading(this.mobileQuery.matches,true);
+  this.setReading(false);
  }
  renderReading(){
   this.readingObserver?.disconnect();this.readingContent.replaceChildren();
@@ -360,8 +358,7 @@ class SlidePresentation{
   },{root:this.reader,rootMargin:'-76px 0px -65% 0px',threshold:0});
   this.readingContent.querySelectorAll('.reading-page').forEach(page=>this.readingObserver.observe(page));
  }
- setReading(reading,automatic=false){
-  if(!automatic)this.viewPreference=reading?'reading':'slides';
+ setReading(reading){
   if(this.editing)this.toggleEditing();
   this.reading=reading;
   if(reading)this.renderReading();else this.readingObserver?.disconnect();

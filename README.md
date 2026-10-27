@@ -9,8 +9,8 @@ Estructura: portada general; portada de Bases y requisitos y una única diaposit
 - `Ctrl+S`: descargar una copia HTML con los cambios.
 - `F`: pantalla completa.
 - Los cambios se guardan automáticamente en este navegador cuando el almacenamiento local está disponible. Para compartirlos, descarga el HTML.
-- En pantallas de hasta 820 px se abre automáticamente una vista de lectura: bloques apilados, texto legible, índice desplegable y desplazamiento vertical. El botón **Diapositivas** permite comparar con el formato original.
-- En escritorio, el botón **Lectura** abre la misma vista. La edición de textos se realiza en **Diapositivas**; al volver a Lectura se muestran los cambios.
+- La presentación siempre se abre en **Diapositivas**, tanto en escritorio como en móvil. El botón **Lectura** abre la vista vertical con bloques apilados, texto legible e índice desplegable. El botón **Diapositivas** permite volver al formato original. Cambiar el tamaño u orientación de pantalla no cambia la vista elegida.
+- La edición de textos se realiza en **Diapositivas**; al volver a Lectura se muestran los cambios.
 
 **Formato:** unos 20 atletas, inscripción exclusivamente por invitación y sin categorías. Los nueve WODs son candidatos: se elegirán tres o cuatro por votación. Para cada WOD se acuerda usar los pesos masculinos o femeninos y esa opción se aplica a todos los atletas, sin elección individual. Solo se permite cambiar un movimiento o ejercicio si la instalación no dispone del material necesario; el resto de la estructura se mantiene. Quien no cumpla los pesos comunes o los movimientos acordados no puede competir.
 
