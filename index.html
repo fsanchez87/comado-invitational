@@ -190,7 +190,67 @@ h1{position:absolute;top:270px;left:82px;margin:0;font:900 151px/1.22 var(--disp
 button{font:500 13px var(--body);color:#eee;background:#202020;border:1px solid #ffffff35;border-radius:5px;padding:9px 13px;cursor:pointer}button:hover{background:#393939}button:focus-visible,a:focus-visible{outline:2px solid #ff4545;outline-offset:4px}button:disabled{opacity:.35;cursor:default}
 .deck-controls{display:flex;gap:8px;align-items:center;padding:6px;background:#080808e6;border:1px solid #ffffff26;border-radius:9px;opacity:0;transition:opacity .2s}.deck-controls:hover,.deck-controls:focus-within,body.ui-on .deck-controls{opacity:1}.counter{font-size:12px;min-width:48px;text-align:center;color:#ccc}.edit-hotzone{position:fixed;left:0;top:0;width:85px;height:65px;z-index:1001}.edit-toggle{position:fixed;left:14px;top:14px;z-index:1002;opacity:0;pointer-events:none;transition:opacity .2s}.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}.save-edit{position:fixed;top:14px;right:14px;z-index:1002;visibility:hidden}body.editing .save-edit{visibility:visible}
 body.editing [data-edit]{outline:1px dashed #ffffff60;outline-offset:5px;cursor:text}.workout [contenteditable=true]{outline-color:#bc000080!important}[contenteditable=true]:focus{outline:2px solid #e33!important}.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:1003;background:#eee;color:#111;padding:12px 18px;border-radius:5px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}
+/* === SEPARATE READING VIEW: the 1920×1080 slide stage is never reflowed === */
+.reading-view[hidden]{display:none}
+.deck-controls{width:max-content;max-width:calc(100vw - 16px);flex-wrap:wrap;justify-content:center}
+body.reading .deck-viewport{visibility:hidden;pointer-events:none}
+body.reading .deck-controls,body.reading .edit-hotzone,body.reading .edit-toggle,body.reading .save-edit{display:none}
+.reading-view{position:fixed;inset:0;z-index:2;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;background:#101010;scroll-padding-top:88px;-webkit-overflow-scrolling:touch}
+.reading-toolbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:64px;padding:12px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));background:#101010f5;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.reading-toolbar .brand{font-size:22px}.reading-actions{display:flex;gap:6px}.reading-toolbar button{min-height:44px;min-width:44px;padding:8px 10px;font-size:11px;white-space:nowrap}
+.reading-content{max-width:760px;margin:0 auto;padding:0 0 calc(40px + env(safe-area-inset-bottom))}
+.reading-page{position:relative;overflow:hidden;padding:40px 24px;scroll-margin-top:76px}
+.reading-page h2{font-size:40px;line-height:1.12;letter-spacing:-1px;overflow-wrap:anywhere}
+.reading-page .section-label{font-size:11px;line-height:1.6;letter-spacing:1.7px;margin-bottom:12px}
+.reading-page .section-label:before{width:22px;height:3px;margin:0 10px 3px 0}
+.reading-page .intro{font-size:16px;line-height:1.65;margin-top:16px}
+.reading-page .reveal{opacity:1;transform:none;transition:none}
+.reading-page .notice{position:static;margin-top:26px;padding:14px 16px;border-left-width:3px;font-size:12px;line-height:1.65}
+.reading-pagination{margin-top:26px;font:600 11px var(--display);letter-spacing:2px;color:#999;text-align:right}
+/* === READING COVER: fluid typography and original atmosphere === */
+.reading-cover{min-height:calc(100svh - 65px);display:flex;flex-direction:column;justify-content:center;padding-top:52px;padding-bottom:44px;background:radial-gradient(ellipse at 100% 25%,#272727,transparent 70%);border-left:5px solid var(--red)}
+.reading-cover .cover-kicker{position:relative;left:auto;top:auto;border-left-width:3px;padding-left:12px;font-size:10px;line-height:1.7;letter-spacing:1.7px;z-index:1}
+.reading-draft{align-self:flex-start;font-size:9px;line-height:1.6;letter-spacing:1.3px;color:#bbb;border:1px solid #ffffff40;padding:7px 10px;margin-bottom:24px}
+.reading-cover h1{position:relative;top:auto;left:auto;font-size:clamp(36px,11.3vw,86px);line-height:1.2;letter-spacing:-1.5px;margin:26px 0 22px;overflow-wrap:anywhere}
+.reading-cover h1 span{font-size:inherit!important;letter-spacing:inherit!important}.reading-cover h1 span+span{font-size:1.3em!important}
+.reading-cover .cover-rule{position:relative;top:auto;left:auto;width:64px;height:4px;flex-shrink:0}
+.reading-cover .cover-sub{position:relative;left:auto;top:auto;margin-top:24px;font-size:16px;line-height:1.8;z-index:1}
+.reading-cover .cover-count{position:relative;right:auto;bottom:auto;display:flex;align-items:baseline;gap:12px;text-align:left;margin-top:34px}
+.reading-cover .cover-count strong{font-size:44px}.reading-cover .cover-count span{font-size:12px;letter-spacing:3px}
+.reading-cover .plate{width:340px;height:340px;right:-190px;top:90px;border-width:50px;pointer-events:none}.reading-cover .plate:before{inset:40px}.reading-cover .plate:after{font-size:85px}
+/* === READING INDEX: keyboard-accessible native disclosure and section links === */
+.reading-index{margin:0 24px 28px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);scroll-margin-top:88px}
+.reading-index summary{padding:20px 0;cursor:pointer;font:700 18px var(--display);letter-spacing:.7px;text-transform:uppercase;min-height:54px}
+.reading-index nav{display:flex;flex-direction:column;padding-bottom:14px}.reading-index a{color:#ccc;text-decoration:none;padding:12px 0;min-height:44px;font-size:14px;line-height:1.5;border-top:1px solid #ffffff0d}.reading-index a:first-child{color:#ff4545}
+/* === READING RULES AND SECTION TITLES === */
+.reading-divider{margin:32px 24px 0;padding:26px 20px;background:linear-gradient(110deg,#bc00001a,transparent);border-left:3px solid var(--red)}
+.reading-divider .divider-number,.reading-divider .divider-rule{display:none}
+.reading-divider .divider-content{position:static}.reading-divider .divider-content h2{font-size:36px;line-height:1.16;letter-spacing:-.8px;margin-top:14px}
+.reading-divider .divider-content .intro{font-size:15px;line-height:1.65;margin-top:18px}
+.reading-divider .divider-bottom{position:static;margin-top:22px;font-size:10px;line-height:1.8;letter-spacing:1.5px}
+.reading-divider .reading-pagination{display:none}
+.reading-rules .content-head{position:static}.reading-rules .content-head h2{font-size:32px}.reading-rules .info-grid{position:static;display:grid;grid-template-columns:minmax(0,1fr);gap:26px;margin-top:30px}
+.reading-rules .info-item{min-height:0;padding-top:18px;border-top-width:1px}.reading-rules .info-item h3{font-size:23px;line-height:1.3;gap:12px;margin-bottom:12px}.reading-rules .info-item h3>span:first-child{font-size:15px}
+.reading-rules .info-item p{font-size:16px;line-height:1.7;color:#cecece}
+/* === READING WORKOUTS: all movements, judging notes and loads stay visible === */
+.reading-wod{margin-top:32px;border-top:1px solid var(--line)}
+.reading-wod .wod-head{position:static;display:flex;align-items:flex-start;gap:12px}.reading-wod .wod-heading{min-width:0;flex:1}.reading-wod .wod-heading h2{font-size:clamp(34px,9vw,56px);line-height:1.1;letter-spacing:-.8px}
+.reading-wod .wod-number{font-size:64px;line-height:1;letter-spacing:-3px;color:#ffffff16}
+.reading-wod .wod-body{position:static;height:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:28px;margin-top:26px}
+.reading-wod .workout{padding:20px 18px;border-top-width:4px;min-width:0}.reading-wod .workout-top{align-items:flex-start;flex-direction:column;gap:8px;padding-bottom:16px;margin-bottom:16px}.reading-wod .format{font-size:24px;line-height:1.25;letter-spacing:.5px}.reading-wod .cap{font-size:12px;line-height:1.5;letter-spacing:.4px}
+.reading-wod .workout .lead{font-size:14px;line-height:1.65;margin-bottom:14px}.reading-wod .movements li{font-size:22px;line-height:1.4;padding:12px 0;overflow-wrap:anywhere}
+.reading-wod .judge{gap:22px;padding:0}.reading-wod .judge-block{padding-bottom:20px}.reading-wod .judge h3{font-size:18px;line-height:1.3;letter-spacing:.6px;margin-bottom:10px}.reading-wod .judge p{font-size:15px;line-height:1.75}
+.reading-wod .round-grid{grid-template-columns:minmax(0,1fr);gap:22px}.reading-wod .round-card{padding-top:14px;border-top-width:1px}.reading-wod .round-card h3{font-size:16px;margin-bottom:10px}.reading-wod .round-card p{font-size:20px;line-height:1.6;overflow-wrap:anywhere}
+.reading-wod .sandbags{font-size:15px;line-height:1.8;margin-top:18px;padding-top:16px}.reading-wod .elimination{font-size:27px;line-height:1.6}.reading-wod .max-reps{font-size:52px;margin-top:20px}.reading-wod .max-reps small{font-size:28px;line-height:1.4}.reading-wod .max-load{font-size:36px;margin-top:20px}.reading-wod .time-window{font-size:14px;line-height:1.7;margin-top:18px}
+/* === READING TABLES: sequence cards, compact three-round comparison === */
+.reading-wod .sequence-table,.reading-wod .sequence-table tbody{display:block;width:100%}.reading-wod .sequence-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.reading-wod .sequence-table tr{display:grid;grid-template-columns:24px minmax(0,1fr);gap:12px 8px;padding:16px 0;border-bottom:1px solid #0002}.reading-wod .sequence-table tr:last-child{border:0;padding-bottom:0}
+.reading-wod .sequence-table td{display:block;width:auto!important;padding:0;border:0;font-size:20px;line-height:1.4;overflow-wrap:anywhere}.reading-wod .sequence-table td:first-child{grid-row:span 2;font-size:13px;line-height:1.8;color:#777}.reading-wod .sequence-table td:last-child{grid-column:2}
+.reading-wod .sequence-table td[data-label]:before{content:attr(data-label);display:block;font:500 10px/1.6 var(--body);letter-spacing:1px;color:#777;margin-bottom:3px}
+.reading-wod .sprint-table{table-layout:fixed}.reading-wod .sprint-table th{font:600 10px/1.5 var(--display);letter-spacing:.2px;padding:8px 4px 12px 0;overflow-wrap:anywhere}.reading-wod .sprint-table td{padding:15px 4px 15px 0;font-size:18px;line-height:1.4;overflow-wrap:anywhere}.reading-wod .sprint-table td:first-child{font-size:14px}.reading-wod .sprint-table th:first-child{width:18%}.reading-wod .sprint-table th:nth-child(2){width:29%}.reading-wod .sprint-table th:nth-child(3){width:35%}.reading-wod .sprint-table th:last-child{width:18%}.reading-wod .sprint-load{font-size:15px;line-height:1.8;margin-top:20px}
+body.reading .toast{top:78px;max-width:calc(100% - 32px);width:max-content}
 @page{size:1920px 1080px;margin:0}@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.edit-hotzone,.edit-toggle,.save-edit,.toast{display:none!important}.reveal{opacity:1!important;transform:none!important}[data-edit]{outline:none!important}}
+@media print{.reading-view{display:none!important}body.reading .deck-viewport{visibility:visible;pointer-events:auto}}
 </style>
 </head>
 <body>
@@ -199,8 +259,13 @@ body.editing [data-edit]{outline:1px dashed #ffffff60;outline-offset:5px;cursor:
 <button class="edit-toggle" id="editToggle" aria-pressed="false" title="Activar edición (E)">Editar textos · E</button>
 <button class="save-edit" id="saveFile">Descargar HTML · Ctrl+S</button>
 <nav class="deck-controls" aria-label="Navegación de diapositivas">
-<button id="prev" aria-label="Diapositiva anterior">←</button><span class="counter" id="counter" aria-live="polite"></span><button id="next" aria-label="Diapositiva siguiente">→</button><button id="full" title="Pantalla completa (F)">⛶</button><button id="editControl">Editar</button>
+<button id="prev" aria-label="Diapositiva anterior">←</button><span class="counter" id="counter" aria-live="polite"></span><button id="next" aria-label="Diapositiva siguiente">→</button><button id="full" title="Pantalla completa (F)">⛶</button><button id="editControl">Editar</button><button id="readingMode" title="Vista de lectura con desplazamiento vertical">Lectura</button>
 </nav>
+<!-- Separate reading document, built from the current slides so edits stay in sync. -->
+<div class="reading-view" id="readingView" hidden>
+<header class="reading-toolbar"><span id="readingBrand"></span><div class="reading-actions"><button id="readingIndex" title="Abrir el índice de la presentación">Índice</button><button id="presentationMode" title="Ver la presentación original en formato 16:9">Diapositivas ↗</button></div></header>
+<main class="reading-content" id="readingContent" aria-label="Invitational Comando: vista de lectura"></main>
+</div>
 <div class="toast" role="status" id="toast"></div>
 <script>
 /* === EVENT CONTENT: transcribed from the supplied programme, without invented caps === */
@@ -248,27 +313,78 @@ if(!stage.querySelector('.slide')){
 }
 /* === PRESENTATION CONTROLLER: keyboard, wheel, swipe, hash and fullscreen === */
 class SlidePresentation{
- constructor(){this.slides=[...stage.querySelectorAll('.slide')];this.currentSlide=0;this.editing=false;this.setupScale();this.setupNavigation();this.setupEditing();this.showSlide(this.hashIndex());this.flashUI()}
+ constructor(){this.slides=[...stage.querySelectorAll('.slide')];this.currentSlide=0;this.editing=false;this.reading=false;this.setupScale();this.setupNavigation();this.setupEditing();this.showSlide(this.hashIndex());this.setupReading();this.flashUI()}
  setupScale(){const fit=()=>{const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`translate(${(innerWidth-1920*s)/2}px,${(innerHeight-1080*s)/2}px) scale(${s})`};fit();addEventListener('resize',fit)}
  hashIndex(){const n=Number(location.hash.slice(1));return Number.isInteger(n)&&n>0?n-1:0}
- showSlide(index){this.currentSlide=Math.max(0,Math.min(index,this.slides.length-1));this.slides.forEach((s,i)=>{const active=i===this.currentSlide;s.classList.toggle('active',active);s.classList.toggle('visible',active);s.setAttribute('aria-hidden',String(!active));s.inert=!active});document.getElementById('counter').textContent=`${this.currentSlide+1} / ${this.slides.length}`;document.getElementById('prev').disabled=this.currentSlide===0;document.getElementById('next').disabled=this.currentSlide===this.slides.length-1;try{history.replaceState(null,'',`#${this.currentSlide+1}`)}catch{}this.flashUI()}
+ showSlide(index,{scroll=true}={}){this.currentSlide=Math.max(0,Math.min(index,this.slides.length-1));this.slides.forEach((s,i)=>{const active=i===this.currentSlide;s.classList.toggle('active',active);s.classList.toggle('visible',active);s.setAttribute('aria-hidden',String(!active));s.inert=this.reading||!active});document.getElementById('counter').textContent=`${this.currentSlide+1} / ${this.slides.length}`;document.getElementById('prev').disabled=this.currentSlide===0;document.getElementById('next').disabled=this.currentSlide===this.slides.length-1;try{history.replaceState(null,'',`#${this.currentSlide+1}`)}catch{}if(this.reading&&scroll)this.scrollReadingTo(this.currentSlide);this.flashUI()}
  flashUI(){document.body.classList.add('ui-on');clearTimeout(this.uiTimer);this.uiTimer=setTimeout(()=>document.body.classList.remove('ui-on'),2200)}
  fullscreen(){if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>this.notify('Usa F11 para pantalla completa.'))}
  setupNavigation(){document.getElementById('prev').onclick=()=>this.showSlide(this.currentSlide-1);document.getElementById('next').onclick=()=>this.showSlide(this.currentSlide+1);document.getElementById('full').onclick=()=>this.fullscreen();addEventListener('hashchange',()=>this.showSlide(this.hashIndex()));
- document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();this.download();return}if(e.key==='Escape'&&this.editing){this.toggleEditing();return}if(e.target.isContentEditable)return;if(e.key.toLowerCase()==='e'){e.preventDefault();this.toggleEditing();return}if(e.key.toLowerCase()==='f'){this.fullscreen();return}if(['ArrowRight','ArrowDown',' ','PageDown','ArrowLeft','ArrowUp','PageUp','Home','End'].includes(e.key)){if(e.target.closest('button'))return;e.preventDefault();if(e.key==='Home')this.showSlide(0);else if(e.key==='End')this.showSlide(this.slides.length-1);else this.showSlide(this.currentSlide+(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)?-1:1))}});
- let wheelTime=0;document.addEventListener('wheel',e=>{if(this.editing||Math.abs(e.deltaY)<20||e.ctrlKey)return;e.preventDefault();if(Date.now()-wheelTime<800)return;wheelTime=Date.now();this.showSlide(this.currentSlide+(e.deltaY>0?1:-1))},{passive:false});
+ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();this.download();return}if(e.key==='Escape'&&this.editing){this.toggleEditing();return}if(e.target.isContentEditable)return;if(e.key.toLowerCase()==='e'){e.preventDefault();this.toggleEditing();return}if(this.reading)return;if(e.key.toLowerCase()==='f'){this.fullscreen();return}if(['ArrowRight','ArrowDown',' ','PageDown','ArrowLeft','ArrowUp','PageUp','Home','End'].includes(e.key)){if(e.target.closest('button'))return;e.preventDefault();if(e.key==='Home')this.showSlide(0);else if(e.key==='End')this.showSlide(this.slides.length-1);else this.showSlide(this.currentSlide+(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)?-1:1))}});
+ let wheelTime=0;document.addEventListener('wheel',e=>{if(this.reading||this.editing||Math.abs(e.deltaY)<20||e.ctrlKey)return;e.preventDefault();if(Date.now()-wheelTime<800)return;wheelTime=Date.now();this.showSlide(this.currentSlide+(e.deltaY>0?1:-1))},{passive:false});
  let start=null;stage.addEventListener('touchstart',e=>{if(this.editing||e.touches.length!==1)return;start={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});stage.addEventListener('touchend',e=>{if(!start)return;const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))this.showSlide(this.currentSlide+(dx<0?1:-1));start=null},{passive:true});document.addEventListener('mousemove',()=>this.flashUI());
- stage.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){e.preventDefault();this.showSlide(Number(a.hash.slice(1))-1)}})}
+  stage.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){e.preventDefault();this.showSlide(Number(a.hash.slice(1))-1)}})}
+ /* === MOBILE READING CONTROLLER: separate DOM, same source content and hashes === */
+ setupReading(){
+  this.reader=document.getElementById('readingView');this.readingContent=document.getElementById('readingContent');this.viewPreference='auto';
+  this.mobileQuery=matchMedia('(max-width: 820px)');
+  document.getElementById('readingMode').onclick=()=>this.setReading(true);
+  document.getElementById('readingIndex').onclick=()=>{const index=this.readingContent.querySelector('.reading-index');index.open=true;index.scrollIntoView({block:'start'});index.querySelector('summary').focus({preventScroll:true})};
+  document.getElementById('presentationMode').onclick=()=>{this.setReading(false);document.getElementById('readingMode').focus({preventScroll:true})};
+  this.mobileQuery.addEventListener('change',()=>{if(this.viewPreference==='auto')this.setReading(this.mobileQuery.matches,true)});
+  this.reader.addEventListener('click',e=>{const link=e.target.closest('a[data-reading-slide]');if(!link)return;e.preventDefault();const index=Number(link.dataset.readingSlide);const details=link.closest('details');if(details)details.open=false;this.showSlide(index);const target=this.readingContent.querySelector(`[data-slide-index="${index}"]`);target?.focus({preventScroll:true})});
+  this.setReading(this.mobileQuery.matches,true);
+ }
+ renderReading(){
+  this.readingObserver?.disconnect();this.readingContent.replaceChildren();
+  const brand=document.getElementById('readingBrand');brand.replaceChildren(this.slides[0].querySelector('.brand').cloneNode(true));
+  this.slides.forEach((slide,index)=>{
+   const copy=slide.cloneNode(true);copy.className=`reading-page ${slide.classList.contains('cover')?'reading-cover':slide.classList.contains('section-divider')?'reading-divider':slide.classList.contains('wod')?'reading-wod':'reading-rules'}`;
+   copy.dataset.slideIndex=index;copy.id=`reading-slide-${index+1}`;copy.tabIndex=-1;copy.removeAttribute('aria-hidden');copy.removeAttribute('inert');
+   copy.querySelectorAll('.slide-header,.slide-footer').forEach(el=>el.remove());
+   if(index===0){const draft=slide.querySelector('.draft')?.cloneNode(true);if(draft){draft.className='reading-draft';copy.querySelector('.cover-kicker').before(draft)}}
+   copy.querySelectorAll('[data-edit],[contenteditable],[id]').forEach(el=>{['data-edit','data-edit-id','contenteditable','spellcheck','id'].forEach(attr=>el.removeAttribute(attr))});
+   copy.querySelectorAll('.sequence-table tbody tr').forEach(row=>{row.cells[1].dataset.label='BACK SQUATS';row.cells[2].dataset.label='DESPUÉS'});
+   const page=document.createElement('p');page.className='reading-pagination';page.textContent=`INVITATIONAL COMANDO / ${String(index+1).padStart(2,'0')} — ${this.slides.length}`;copy.append(page);this.readingContent.append(copy);
+  });
+  const index=document.createElement('details');index.className='reading-index';
+  const summary=document.createElement('summary');summary.textContent='Índice de la presentación';index.append(summary);
+  const nav=document.createElement('nav');nav.setAttribute('aria-label','Índice de lectura');
+  this.slides.forEach((slide,i)=>{if(i>0&&!slide.classList.contains('section-divider')&&!slide.classList.contains('wod'))return;const a=document.createElement('a');a.href=`#${i+1}`;a.dataset.readingSlide=i;a.textContent=i===0?'Inicio':`${slide.classList.contains('wod')?`WOD ${String(i-3).padStart(2,'0')} / `:''}${slide.querySelector('h2').textContent}`;nav.append(a)});
+  index.append(nav);this.readingContent.children[0].after(index);
+  // The observer tracks the section being read so switching back opens the same slide.
+  this.readingObserver=new IntersectionObserver(entries=>{
+   if(!this.reading||this.readingScrollLocked)return;
+   const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>Math.abs(a.boundingClientRect.top-80)-Math.abs(b.boundingClientRect.top-80));
+   if(visible.length)this.showSlide(Number(visible[0].target.dataset.slideIndex),{scroll:false});
+  },{root:this.reader,rootMargin:'-76px 0px -65% 0px',threshold:0});
+  this.readingContent.querySelectorAll('.reading-page').forEach(page=>this.readingObserver.observe(page));
+ }
+ setReading(reading,automatic=false){
+  if(!automatic)this.viewPreference=reading?'reading':'slides';
+  if(this.editing)this.toggleEditing();
+  this.reading=reading;
+  if(reading)this.renderReading();else this.readingObserver?.disconnect();
+  this.reader.hidden=!reading;document.body.classList.toggle('reading',reading);
+  const viewport=document.querySelector('.deck-viewport');viewport.inert=reading;viewport.setAttribute('aria-hidden',String(reading));
+  this.showSlide(this.currentSlide);
+ }
+ scrollReadingTo(index){
+  const target=this.readingContent.querySelector(`[data-slide-index="${index}"]`);if(!target)return;
+  this.readingScrollLocked=true;clearTimeout(this.readingScrollTimer);
+  this.reader.scrollTo({top:this.reader.scrollTop+target.getBoundingClientRect().top-this.reader.getBoundingClientRect().top-76,behavior:'instant'});
+  this.readingScrollTimer=setTimeout(()=>{this.readingScrollLocked=false},200);
+ }
  /* === INLINE EDITOR: stable IDs, local autosave, plain-text paste, HTML export === */
  setupEditing(){this.key='invitational-comando-arena-v5-unified-rules';this.fields=[...document.querySelectorAll('[data-edit]')];this.fields.forEach((el,i)=>{el.dataset.editId=el.dataset.editId||`text-${i}`;el.removeAttribute('contenteditable')});
  try{const saved=JSON.parse(localStorage.getItem(this.key)||'{}');this.fields.forEach(el=>{if(typeof saved[el.dataset.editId]==='string')el.innerHTML=saved[el.dataset.editId]})}catch{}
  document.getElementById('editToggle').onclick=()=>this.toggleEditing();document.getElementById('editControl').onclick=()=>this.toggleEditing();document.getElementById('saveFile').onclick=()=>this.download();const hot=document.querySelector('.edit-hotzone'),btn=document.getElementById('editToggle');let hide;[hot,btn].forEach(el=>{el.addEventListener('mouseenter',()=>{clearTimeout(hide);btn.classList.add('show')});el.addEventListener('mouseleave',()=>{hide=setTimeout(()=>{if(!this.editing)btn.classList.remove('show')},400)})});hot.onclick=()=>this.toggleEditing();
  stage.addEventListener('input',e=>{if(!e.target.closest('[data-edit]'))return;this.saveLocal();clearTimeout(this.overflowTimer);this.overflowTimer=setTimeout(()=>this.checkOverflow(),400)});
  stage.addEventListener('paste',e=>{if(!e.target.isContentEditable)return;e.preventDefault();const text=e.clipboardData.getData('text/plain');const selection=getSelection();if(!selection.rangeCount)return;const range=selection.getRangeAt(0);range.deleteContents();const node=document.createTextNode(text);range.insertNode(node);range.setStartAfter(node);range.collapse(true);selection.removeAllRanges();selection.addRange(range);this.saveLocal()})}
- toggleEditing(){this.editing=!this.editing;document.body.classList.toggle('editing',this.editing);this.fields.forEach(el=>{el.contentEditable=String(this.editing);el.spellcheck=this.editing});const button=document.getElementById('editToggle');button.classList.toggle('active',this.editing);button.setAttribute('aria-pressed',String(this.editing));button.textContent=this.editing?'Terminar edición · Esc':'Editar textos · E';if(!this.editing){document.activeElement?.blur();this.saveLocal()}this.notify(this.editing?'Haz clic en cualquier texto. Ctrl+S descarga una copia editable.':'Edición terminada. Cambios guardados en este navegador.')}
+ toggleEditing(){if(this.reading){this.notify('Para editar, cambia a Diapositivas y pulsa E.');return}this.editing=!this.editing;document.body.classList.toggle('editing',this.editing);this.fields.forEach(el=>{el.contentEditable=String(this.editing);el.spellcheck=this.editing});const button=document.getElementById('editToggle');button.classList.toggle('active',this.editing);button.setAttribute('aria-pressed',String(this.editing));button.textContent=this.editing?'Terminar edición · Esc':'Editar textos · E';if(!this.editing){document.activeElement?.blur();this.saveLocal()}this.notify(this.editing?'Haz clic en cualquier texto. Ctrl+S descarga una copia editable.':'Edición terminada. Cambios guardados en este navegador.')}
  saveLocal(){try{const data=Object.fromEntries(this.fields.map(el=>[el.dataset.editId,el.innerHTML]));localStorage.setItem(this.key,JSON.stringify(data))}catch{this.notify('No hay guardado local disponible. Descarga el HTML con Ctrl+S.')}}
  checkOverflow(){const slide=this.slides[this.currentSlide];if([...slide.querySelectorAll('[data-edit],.workout,.judge,.info-item')].some(el=>el.scrollHeight>el.clientHeight+3||el.scrollWidth>el.clientWidth+3))this.notify('El texto supera su espacio. Acórtalo para mantener la legibilidad.')}
- download(){this.saveLocal();const copy=document.documentElement.cloneNode(true);copy.querySelector('body').classList.remove('editing','ui-on');copy.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));copy.querySelectorAll('.show,.edit-toggle.active').forEach(el=>el.classList.remove('show','active'));copy.querySelector('#editToggle').textContent='Editar textos · E';copy.querySelector('#editToggle').setAttribute('aria-pressed','false');const blob=new Blob(['<!doctype html>\n'+copy.outerHTML],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='invitational-comando.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);this.notify('Copia HTML descargada con tus cambios.')}
+ download(){this.saveLocal();const copy=document.documentElement.cloneNode(true);copy.querySelector('body').classList.remove('editing','ui-on','reading');copy.querySelector('#readingContent').replaceChildren();copy.querySelector('#readingBrand').replaceChildren();copy.querySelector('#readingView').hidden=true;copy.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));copy.querySelectorAll('.show,.edit-toggle.active').forEach(el=>el.classList.remove('show','active'));copy.querySelector('#editToggle').textContent='Editar textos · E';copy.querySelector('#editToggle').setAttribute('aria-pressed','false');const blob=new Blob(['<!doctype html>\n'+copy.outerHTML],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='invitational-comando.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);this.notify('Copia HTML descargada con tus cambios.')}
  notify(message){const el=document.getElementById('toast');el.textContent=message;el.classList.add('show');clearTimeout(this.toastTimer);this.toastTimer=setTimeout(()=>el.classList.remove('show'),3500)}
 }
 window.presentation=new SlidePresentation();
